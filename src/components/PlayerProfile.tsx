@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { useGameState } from '../context/GameStateContext';
-import { Shield, Zap, Terminal, Code, Cpu, Sword, Book } from 'lucide-react';
+import { Shield, Zap, Terminal, Code, Cpu, Sword, Book, Award, Lock, Unlock } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 export const PlayerProfile = () => {
@@ -12,6 +12,37 @@ export const PlayerProfile = () => {
     { name: 'React UI Spells', level: 38, icon: <Terminal size={16} /> },
     { name: 'Writing & Storytelling', level: 25, icon: <Book size={16} /> },
     { name: 'Endurance (Coffee)', level: 80, icon: <Zap size={16} /> },
+  ];
+
+  const achievements = [
+    {
+      id: 'first_blood',
+      title: 'Novice Adventurer',
+      description: 'Complete your very first quest.',
+      isUnlocked: readQuests.length >= 1,
+      icon: <Sword size={20} />
+    },
+    {
+      id: 'scholar',
+      title: 'Dedicated Scholar',
+      description: 'Read and complete 3 total quests.',
+      isUnlocked: readQuests.length >= 3,
+      icon: <Book size={20} />
+    },
+    {
+      id: 'rising_star',
+      title: 'Rising Star',
+      description: 'Reach Level 2 in your journey.',
+      isUnlocked: level >= 2,
+      icon: <Award size={20} />
+    },
+    {
+      id: 'the_grind',
+      title: 'The Grind',
+      description: 'Reach Level 10 and become a master.',
+      isUnlocked: level >= 10,
+      icon: <Zap size={20} />
+    }
   ];
 
   return (
@@ -102,19 +133,36 @@ export const PlayerProfile = () => {
             transition={{ delay: 0.1 }}
             className="border border-zinc-800 bg-zinc-900/40 rounded-xl p-8"
           >
-            <h3 className="text-xl font-bold tracking-tight mb-4 flex items-center gap-2">
-              <Shield className="text-emerald-500" size={20} /> Origin Story
+            <h3 className="text-xl font-bold tracking-tight mb-6 flex items-center gap-2 border-b border-zinc-800/50 pb-4">
+              <Shield className="text-emerald-500" size={20} /> The Archive Logs
             </h3>
-            <div className="prose prose-invert prose-emerald text-zinc-400 space-y-4">
-              <p>
-                Greetings, traveler. I am a front-end developer and writer who decided that viewing life as a series of random events was too boring. Instead, I treat my daily hurdles as boss fights and my routines as daily quests.
-              </p>
-              <p>
-                I forged my early skills in the fires of nested div tags and callback hell. Since then, I've journeyed through the realms of React and TypeScript, slaying bugs and optimizing rendering cycles.
-              </p>
-              <p>
-                When I'm not writing code or blog posts, you'll find me farming materials in various RPGs, exploring nature trails, or trying to find the ultimate setup for my mechanical keyboard.
-              </p>
+            <div className="space-y-6">
+              
+              <div className="relative pl-6 border-l border-zinc-800">
+                <div className="absolute w-3 h-3 bg-zinc-950 border-2 border-emerald-500 rounded-full -left-[6.5px] top-1 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                <h4 className="text-emerald-400 font-mono text-xs uppercase mb-2 block tracking-wider">Prologue: The Awakening</h4>
+                <p className="text-zinc-300 leading-relaxed text-sm">
+                  System logs indicate the subject first gained consciousness in the early days of the Web 2.0 expansion. What began as a simple "Hello World" terminal input slowly metastasized into an obsession with the arcane arts of markup and stylesheets. The early grinding was notoriously brutal—spending nights locked in combat with Internet Explorer rendering bugs and the dreaded DOM hierarchy. But every defeated float layout yielded precious XP.
+                </p>
+              </div>
+
+              <div className="relative pl-6 border-l border-zinc-800">
+                <div className="absolute w-3 h-3 bg-zinc-950 border-2 border-violet-500 rounded-full -left-[6.5px] top-1 shadow-[0_0_8px_rgba(139,92,246,0.5)]" />
+                <h4 className="text-violet-400 font-mono text-xs uppercase mb-2 block tracking-wider">Act I: The Trial of Frameworks</h4>
+                <p className="text-zinc-300 leading-relaxed text-sm">
+                  After passing the threshold into the modern era, the subject adopted the Class of 'Front-End Sorcerer'. Armed with the Grimoire of React, they learned to cast dynamic components, managing state across sprawling application dungeons. The introduction of TypeScript brought strict typing to their incantations, significantly dropping the error rate of executed spells and making the codebase impervious to standard runtime attacks. 
+                </p>
+              </div>
+
+              <div className="relative pl-6 border-l border-emerald-500">
+                <div className="absolute w-3 h-3 bg-emerald-500 border-2 border-emerald-200 rounded-full -left-[6.5px] top-1 shadow-[0_0_12px_rgba(16,185,129,0.8)] animate-pulse" />
+                <h4 className="text-emerald-400 font-mono text-xs uppercase mb-2 block tracking-wider">Current Objective: Gamify Reality</h4>
+                <p className="text-zinc-300 leading-relaxed text-sm backdrop-blur-sm bg-zinc-900/30 p-4 rounded-lg my-2 border border-zinc-800/50">
+                  <span className="text-zinc-500 font-mono block mb-1 uppercase text-[10px]">&gt;&gt; Personal Directive Override</span>
+                  Having realized that treating "real life" as a series of mundane tasks was heavily nerfing their motivation, the subject installed a permanent augmented perspective. Life is no longer a to-do list; it is a Quest Board. Taxes are timed escort missions. Going to the gym is strength grinding. When not writing code or chronicling these adventures, they are currently farming materials in various RPG realms, calibrating mechanical keyboards for optimal APM, and exploring the vast overworld mapping of local hiking trails.
+                </p>
+              </div>
+
             </div>
           </motion.div>
 
@@ -160,6 +208,53 @@ export const PlayerProfile = () => {
               <div className="text-3xl text-violet-400 glitch-hover">1,042</div>
             </div>
           </div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="border border-zinc-800 bg-zinc-900/40 rounded-xl p-8"
+          >
+            <h3 className="text-xl font-bold tracking-tight mb-6 flex items-center gap-2">
+              <Award className="text-emerald-500" size={20} /> Achievements
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {achievements.map((achievement, index) => (
+                <div 
+                  key={achievement.id}
+                  className={cn(
+                    "flex flex-col gap-2 p-4 rounded-xl border transition-all relative overflow-hidden",
+                    achievement.isUnlocked 
+                      ? "border-emerald-500/30 bg-emerald-500/5 shadow-[0_0_15px_rgba(16,185,129,0.1)]" 
+                      : "border-zinc-800 bg-zinc-900/30 opacity-60 grayscale"
+                  )}
+                >
+                  {/* Subtle sweep background for unlocked items */}
+                  {achievement.isUnlocked && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/5 to-transparent skew-x-[45deg] animate-[gradient_3s_linear_infinite] w-[200%] -left-[50%] pointer-events-none" />
+                  )}
+                  
+                  <div className="flex items-center justify-between z-10 relative">
+                    <div className={cn(
+                      "p-2 rounded-lg pointer-events-none",
+                      achievement.isUnlocked ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-zinc-800 text-zinc-500"
+                    )}>
+                      {achievement.icon}
+                    </div>
+                    {achievement.isUnlocked ? (
+                      <span className="font-mono text-xs text-emerald-400 flex items-center gap-1"><Unlock size={12} /> UNLOCKED</span>
+                    ) : (
+                      <span className="font-mono text-xs text-zinc-500 flex items-center gap-1"><Lock size={12} /> LOCKED</span>
+                    )}
+                  </div>
+                  <div className="z-10 relative">
+                    <h4 className={cn("font-bold mt-1", achievement.isUnlocked ? "text-zinc-100" : "text-zinc-400")}>{achievement.title}</h4>
+                    <p className="text-sm text-zinc-500">{achievement.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
 
         </div>
       </div>
