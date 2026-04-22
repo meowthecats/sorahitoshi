@@ -63,12 +63,22 @@ export const QuestBoard = ({ onSelectQuest }: QuestBoardProps) => {
                 transition={{ delay: index * 0.1 }}
                 onClick={() => onSelectQuest(quest)}
                 className={cn(
-                  "group relative border border-zinc-800 bg-zinc-900/50 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:border-emerald-500/50 hover:bg-zinc-900",
-                  isCompleted && "opacity-75 border-zinc-800/50 hover:border-zinc-700 hover:bg-zinc-900/30",
-                  !isCompleted && "shadow-[0_10px_30px_-15px_rgba(16,185,129,0.2)] hover:shadow-[0_10px_40px_-12px_rgba(16,185,129,0.3)] hover:-translate-y-1"
+                  "group relative rounded-xl overflow-hidden cursor-pointer transition-all duration-300",
+                  isCompleted 
+                    ? "bg-zinc-900 border border-emerald-900/30 hover:border-emerald-700/50 opacity-90 shadow-[inset_0_0_15px_rgba(16,185,129,0.05)] hover:bg-zinc-900/80" 
+                    : "bg-zinc-900/50 border border-zinc-800 hover:border-emerald-500/50 hover:bg-zinc-900 shadow-[0_10px_30px_-15px_rgba(16,185,129,0.2)] hover:shadow-[0_10px_40px_-12px_rgba(16,185,129,0.3)] hover:-translate-y-1"
                 )}
               >
-                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
+                {/* Completed Quest Sweep Animation */}
+                {isCompleted && (
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent skew-x-[45deg] w-[200%] -left-[50%] pointer-events-none z-0"
+                    animate={{ x: ['-100%', '100%'] }}
+                    transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity, repeatDelay: 2 }}
+                  />
+                )}
+
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity z-10">
                   <span className="font-mono text-8xl font-black italic text-emerald-500/50 -mr-4 -mt-8 block pointer-events-none select-none">
                     0{index + 1}
                   </span>

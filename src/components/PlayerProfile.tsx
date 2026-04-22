@@ -40,7 +40,7 @@ export const PlayerProfile = () => {
                 referrerPolicy="no-referrer"
               />
             </div>
-            <h3 className="text-2xl font-bold text-center text-zinc-100 mb-1 glitch-hover">sorahitoshi89</h3>
+            <h3 className="text-2xl font-bold text-center text-zinc-100 mb-1 glitch-hover">sorahitoshi</h3>
             <p className="text-center font-mono text-emerald-400 text-sm mb-6">Class: Front-End Sorcerer</p>
             
             <div className="space-y-4">
