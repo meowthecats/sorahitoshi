@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { useGameState } from '../context/GameStateContext';
-import { Shield, Zap, Terminal, Code, Cpu, Sword, Book, Award, Lock, Unlock } from 'lucide-react';
+import { Shield, Zap, Terminal, Code, Cpu, Sword, Book, Award, Lock, Unlock, Github, Twitter, Linkedin, Link as LinkIcon } from 'lucide-react';
 import { cn } from '../lib/utils';
 
 export const PlayerProfile = () => {
@@ -14,36 +14,71 @@ export const PlayerProfile = () => {
     { name: 'Endurance (Coffee)', level: 80, icon: <Zap size={16} /> },
   ];
 
-  const achievements = [
+  const baseAchievements = [
     {
       id: 'first_blood',
       title: 'Novice Adventurer',
       description: 'Complete your very first quest.',
-      isUnlocked: readQuests.length >= 1,
+      lore: 'The first step out of the tutorial zone. You have proven you can click buttons and read text. The realm acknowledges your basic motor skills.',
+      checkUnlock: (readQuests: string[], level: number) => readQuests.length >= 1,
       icon: <Sword size={20} />
     },
     {
       id: 'scholar',
       title: 'Dedicated Scholar',
       description: 'Read and complete 3 total quests.',
-      isUnlocked: readQuests.length >= 3,
+      lore: 'Knowledge is power, and you have consumed enough of it to fill a small pamphlet. The ancients would be moderately impressed.',
+      checkUnlock: (readQuests: string[], level: number) => readQuests.length >= 3,
       icon: <Book size={20} />
     },
     {
       id: 'rising_star',
       title: 'Rising Star',
       description: 'Reach Level 2 in your journey.',
-      isUnlocked: level >= 2,
+      lore: 'You have leveled up, shedding your newbie skin for slightly more resilient armor. Monsters now consider you a light snack instead of a free meal.',
+      checkUnlock: (readQuests: string[], level: number) => level >= 2,
       icon: <Award size={20} />
     },
     {
       id: 'the_grind',
       title: 'The Grind',
       description: 'Reach Level 10 and become a master.',
-      isUnlocked: level >= 10,
+      lore: 'Through sheer force of will and an unhealthy amount of caffeine, you reached Level 10. You are now officially too invested to log off.',
+      checkUnlock: (readQuests: string[], level: number) => level >= 10,
       icon: <Zap size={20} />
     }
   ];
+
+  const [achievements, setAchievements] = useState(() => 
+    baseAchievements.map(ach => ({
+      ...ach,
+      isUnlocked: ach.checkUnlock(readQuests, level)
+    }))
+  );
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      // Re-evaluate on interval to catch any external updates
+      setAchievements(prev => prev.map(ach => {
+        const baseAch = baseAchievements.find(b => b.id === ach.id);
+        if (!baseAch) return ach;
+        const nowUnlocked = baseAch.checkUnlock(readQuests, level);
+        return { ...ach, isUnlocked: nowUnlocked };
+      }));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [readQuests, level]);
+
+  useEffect(() => {
+    // Re-evaluate immediately on level or quest updates
+    setAchievements(prev => prev.map(ach => {
+      const baseAch = baseAchievements.find(b => b.id === ach.id);
+      if (!baseAch) return ach;
+      const nowUnlocked = baseAch.checkUnlock(readQuests, level);
+      return { ...ach, isUnlocked: nowUnlocked };
+    }));
+  }, [readQuests, level]);
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-6">
@@ -123,6 +158,32 @@ export const PlayerProfile = () => {
               </li>
             </ul>
           </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="border border-zinc-800 bg-zinc-900/40 rounded-xl p-6"
+          >
+            <h4 className="font-mono text-xs text-zinc-500 mb-4 flex items-center gap-2"><LinkIcon size={14} /> COMM LINKS</h4>
+            <div className="flex flex-col gap-3">
+              <a href="#" className="flex items-center justify-between group text-sm text-zinc-400 hover:text-emerald-400 transition-all border border-zinc-800/50 hover:border-emerald-500/30 bg-zinc-900/50 p-3 rounded-lg overflow-hidden relative">
+                <div className="absolute inset-x-0 bottom-0 h-[1px] bg-emerald-500/0 group-hover:bg-emerald-500/50 w-0 group-hover:w-full transition-all duration-500" />
+                <span className="flex items-center gap-3 relative z-10"><Github size={16} /> GitHub Config</span>
+                <span className="font-mono text-[10px] text-zinc-600 group-hover:text-emerald-500/50 transition-colors relative z-10 uppercase tracking-widest">Connect</span>
+              </a>
+              <a href="#" className="flex items-center justify-between group text-sm text-zinc-400 hover:text-blue-400 transition-all border border-zinc-800/50 hover:border-blue-500/30 bg-zinc-900/50 p-3 rounded-lg overflow-hidden relative">
+                <div className="absolute inset-x-0 bottom-0 h-[1px] bg-blue-500/0 group-hover:bg-blue-500/50 w-0 group-hover:w-full transition-all duration-500" />
+                <span className="flex items-center gap-3 relative z-10"><Twitter size={16} /> Global Feed</span>
+                <span className="font-mono text-[10px] text-zinc-600 group-hover:text-blue-500/50 transition-colors relative z-10 uppercase tracking-widest">Connect</span>
+              </a>
+              <a href="#" className="flex items-center justify-between group text-sm text-zinc-400 hover:text-indigo-400 transition-all border border-zinc-800/50 hover:border-indigo-500/30 bg-zinc-900/50 p-3 rounded-lg overflow-hidden relative">
+                <div className="absolute inset-x-0 bottom-0 h-[1px] bg-indigo-500/0 group-hover:bg-indigo-500/50 w-0 group-hover:w-full transition-all duration-500" />
+                <span className="flex items-center gap-3 relative z-10"><Linkedin size={16} /> Prof. Network</span>
+                <span className="font-mono text-[10px] text-zinc-600 group-hover:text-indigo-500/50 transition-colors relative z-10 uppercase tracking-widest">Connect</span>
+              </a>
+            </div>
+          </motion.div>
         </div>
 
         {/* Right Column: Lore & Skills */}
@@ -151,6 +212,14 @@ export const PlayerProfile = () => {
                 <h4 className="text-violet-400 font-mono text-xs uppercase mb-2 block tracking-wider">Act I: The Trial of Frameworks</h4>
                 <p className="text-zinc-300 leading-relaxed text-sm">
                   After passing the threshold into the modern era, the subject adopted the Class of 'Front-End Sorcerer'. Armed with the Grimoire of React, they learned to cast dynamic components, managing state across sprawling application dungeons. The introduction of TypeScript brought strict typing to their incantations, significantly dropping the error rate of executed spells and making the codebase impervious to standard runtime attacks. 
+                </p>
+              </div>
+
+              <div className="relative pl-6 border-l border-zinc-800">
+                <div className="absolute w-3 h-3 bg-zinc-950 border-2 border-blue-500 rounded-full -left-[6.5px] top-1 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
+                <h4 className="text-blue-400 font-mono text-xs uppercase mb-2 block tracking-wider">Act II: Project 'Life as an RPG'</h4>
+                <p className="text-zinc-300 leading-relaxed text-sm">
+                  The subject realized that their primary motivation interface (the standard 'To-Do List') was causing severe debuffs to productivity and morale. Thus, the "Life as an RPG" initiative was born. By completely re-skinning reality with an epic Cyberpunk/Fantasy HUD, implementing a global game state manager to track experience points, and creating an achievement system mapping to real-world tasks, the subject successfully bypassed their own brain's executive dysfunction protocols. 
                 </p>
               </div>
 
@@ -249,7 +318,13 @@ export const PlayerProfile = () => {
                   </div>
                   <div className="z-10 relative">
                     <h4 className={cn("font-bold mt-1", achievement.isUnlocked ? "text-zinc-100" : "text-zinc-400")}>{achievement.title}</h4>
-                    <p className="text-sm text-zinc-500">{achievement.description}</p>
+                    <p className="text-sm text-zinc-400 mb-1">{achievement.description}</p>
+                    {achievement.isUnlocked && (
+                      <p className="text-xs text-emerald-500/70 italic mt-2 border-t border-emerald-900/30 pt-2 leading-relaxed">"{achievement.lore}"</p>
+                    )}
+                    {!achievement.isUnlocked && (
+                      <p className="text-xs text-zinc-600 mt-2 border-t border-zinc-800 pt-2 blur-sm select-none">"Hidden lore awaits those who prove themselves worthy in the trials ahead..."</p>
+                    )}
                   </div>
                 </div>
               ))}
